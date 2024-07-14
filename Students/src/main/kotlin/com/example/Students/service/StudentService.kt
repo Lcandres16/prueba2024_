@@ -1,5 +1,7 @@
 package com.example.Students.service
 
+import com.example.Students.Client.GradeClient
+import com.example.Students.Dto.StudentGradeDto
 import com.example.Students.model.Student
 import com.example.Students.repository.StudentRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,10 +15,33 @@ class StudentService {
     @Autowired
     lateinit var studentRepository: StudentRepository
 
-    fun list(): List<Student> {
-        return studentRepository.findAll()
+    @Autowired
+    lateinit var gradeClient: GradeClient
+
+    fun list(): List<StudentGradeDto> {
+        val students = studentRepository.findAll()
+        val studentsGrades: MutableList<StudentGradeDto> = mutableListOf()
+
+        for(student in students){
+            val grades = gradeClient.findAllByStudentId(student.id)
+            val studentWithGrades = StudentGradeDto()
+            studentWithGrades.id = student.id
+            studentWithGrades.email = student.email
+            studentWithGrades.fullName = student.fullName
+            studentWithGrades.grades = grades
+
+            studentsGrades.add(studentWithGrades)
+        }
+
+        return studentsGrades
     }
 
+
+    fun findById(id: Long?): Student{
+        val student = studentRepository.findById(id)?:
+        throw NoSuchElementException("student not found")
+        return student
+    }
 
     fun save(student: Student): Student {
         try {

@@ -18,6 +18,11 @@ class GradeController {
         return gradeService.list()
     }
 
+    @GetMapping("/students/{id}")
+    fun findAllByStudentId(@PathVariable("id") studentId: Long): List<Grade>{
+        return gradeService.findAllByStudentId(studentId)
+    }
+
     @PostMapping
     fun save (@RequestBody grade: Grade): ResponseEntity<Grade> {
         return ResponseEntity(gradeService.save(grade), HttpStatus.OK)

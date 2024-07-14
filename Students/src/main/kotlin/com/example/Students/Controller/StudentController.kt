@@ -1,5 +1,6 @@
 package com.example.Students.Controller
 
+import com.example.Students.Dto.StudentGradeDto
 import com.example.Students.model.Student
 import com.example.Students.service.StudentService
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,8 +15,13 @@ class StudentController {
     lateinit var studentService: StudentService
 
     @GetMapping
-    fun list ():List <Student> {
+    fun list ():List <StudentGradeDto> {
         return studentService.list()
+    }
+
+    @GetMapping("/{id}")
+    fun findById(@PathVariable("id") id: Long?): Student{
+        return studentService.findById(id)
     }
 
     @PostMapping

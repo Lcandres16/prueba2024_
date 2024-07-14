@@ -15,6 +15,6 @@ class Grade {
     var grade: String? = null
 
     @Column(name = "students_id")
-    var studenstId: Int? = null
+    var studentsId: Long? = null
 
 }

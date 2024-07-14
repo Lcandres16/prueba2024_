@@ -1,5 +1,6 @@
 package com.example.Grades.service
 
+import com.example.Grades.client.StudentClient
 import com.example.Grades.model.Grade
 import com.example.Grades.repository.GradeRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,12 +13,22 @@ class GradeService {
     @Autowired
     lateinit var gradeRepository: GradeRepository
 
+    @Autowired
+    lateinit var studentClient: StudentClient
+
     fun list (): List<Grade> {
         return gradeRepository.findAll()
     }
 
+    fun findAllByStudentId(studentsId: Long): List<Grade>{
+        return gradeRepository.findAllByStudentId(studentsId)
+    }
+
     fun save(grade: Grade): Grade {
         try {
+            studentClient.finById(grade.studentsId)?:
+            throw NoSuchElementException("student not found")
+
             grade.grade?.takeIf { it.trim().isNotEmpty() }
                 ?: throw Exception("Grade is null or empty")
 
